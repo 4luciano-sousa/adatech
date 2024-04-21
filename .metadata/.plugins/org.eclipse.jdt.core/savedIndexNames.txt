@@ -1,0 +1,7 @@
+INDEX VERSION 1.134+C:\Users\Luciano\eclipse-workspace\adatech\.metadata\.plugins\org.eclipse.jdt.core
+1865797976.index
+542094340.index
+2905949048.index
+1939248916.index
+876352194.index
+846874316.index
