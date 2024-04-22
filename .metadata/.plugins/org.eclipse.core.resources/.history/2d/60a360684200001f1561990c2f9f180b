@@ -1,0 +1,6 @@
+package ada.com.exercicios.lista1;
+
+public interface ConexaoBD {
+	
+	    boolean conectar();
+	}

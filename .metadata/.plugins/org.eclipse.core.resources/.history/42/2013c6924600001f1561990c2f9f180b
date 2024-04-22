@@ -1,0 +1,4 @@
+package ada.com.exercicios.lista1;
+
+	interface AnotacaoSerializavel extends Serializable {
+	}

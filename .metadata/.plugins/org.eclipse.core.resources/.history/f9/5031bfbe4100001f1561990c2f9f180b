@@ -1,0 +1,9 @@
+package ada.com.exercicios.lista1;
+
+	public class ConexaoMySQL implements ConexaoBD {
+	    @Override
+	    public boolean conectar() {
+	        // Implemente a lógica de conexão específica para MySQL
+	        return true; // Exemplo simples de retorno
+	    }
+	}

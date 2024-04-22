@@ -1,0 +1,5 @@
+package ada.com.exercicios.lista1;
+
+public record AnotacaoProfissional(String conteudo) implements AnotacaoSerializavel {
+
+}

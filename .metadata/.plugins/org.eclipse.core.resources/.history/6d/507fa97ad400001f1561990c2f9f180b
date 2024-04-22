@@ -1,0 +1,13 @@
+package ada.com.exercicios.lista1;
+
+public class AnotacaoArquivoGerenciador {
+
+	public static void salvarEmDisco(AnotacaoSerializavel anotacao, String nomeArquivo) {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
+			oos.writeObject(anotacao);
+			System.out.println("Anotação salva com sucesso em " + nomeArquivo);
+		} catch (IOException e) {
+			System.err.println("Erro ao salvar a anotação em disco: " + e.getMessage());
+		}
+	}
+}
