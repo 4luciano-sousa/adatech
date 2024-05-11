@@ -1,0 +1,61 @@
+Datas com Java - Parte I
+A manipulação de datas no Java foi modificada com o novo pacote java.time, presente na linguagem a partir da versão 1.8. Deste então, você precisa evitar usar os pacotes java.util.Date, java.util.Calendar e java.text.DateFormat, considerados antigos e legados.
+
+Neste capítulo apresentamos como utilizar o pacote java.time e suas classes na criação, formatação e operações sobre datas e horários. Além da sua formatação e conversão para o formato String.
+
+Categoria	Descrição	Classes
+Datas e horários	Representa a data e horário local.	java.time.LocalDate, java.time.LocalTime, java.time.LocalDateTime
+Data/hora com fuso horário	Representa data e hora com informação de fuso horário.	java.time.ZonedDateTime, java.time.OffsetDateTime
+Formatadores de datas e horas	Analisam e imprimem datas e horas com padrões e em uma variedade de estilos.	java.time.format.DateTimeFormatter
+Ajustes de datas e horas	Ajustam e manipulam datas e horários com incrementos temporais.	java.time.temporal.TemporalAdjusters, java.time.temporal.ChronoUnit
+Períodos, durações e instantes de tempo	Representam uma quantidade de tempo, períodos de dias ou superiores e durações de curtos períodos de tempo como minutos ou segundos, como um específico instante de tempo.	java.time.Periods, java.time.Durations, java.time.Instants
+Tabela: Lista de classes do pacote java.time e sua utilização
+
+Classes LocalDate, LocalDateTime e LocalTime
+A partir da versão 1.8 do Java, a representação de datas e horários são representadas pelas classes LocalDate, LocalDateTime e LocalTime, respectivamente.
+
+Instanciando objetos com o método now()
+Para capturarmos a data e/ou hora corrente, utilizamos o método .now(). Experimente o exemplo abaixo em sua IDE.
+
+import java.time.LocalDate;  
+import java.time.LocalDateTime;  
+import java.time.LocalTime;  
+  
+public class InstanciandoDatas {  
+  
+    public static void main(String[] args) {  
+        LocalDate data = LocalDate.now();
+        LocalTime horario = LocalTime.now();
+
+        LocalDateTime dataHora = LocalDateTime.of(data, horario);
+        System.out.println("Data e hora usando LocalDateTime.of(data, horario): " + dataHora);
+        
+        dataHora = LocalDateTime.now();
+        System.out.println("Data e hora usando LocalDateTime.now(): " + dataHora);  
+    }  
+}
+Código: InstanciandoDatas.java
+
+Data e hora usando LocalDateTime.of(data, horario): 2022-05-04T18:32:49.130299600
+Data e hora usando LocalDateTime.now(): 2022-05-04T18:32:49.132294300
+Execução: resultado da execução de InstanciandoDatas.java
+
+Instanciando datas personalizadas - método of()
+A API fornece os seguintes métodos estáticos para a criação de objetos java.time customizados:
+
+LocalDate.of(YYYY, MM, DD)
+retorna um LocalDate com o ano (YYYY), mês (MM) e dia (DD) fornecidos.
+LocalTime.of(hh, mm, ss)
+retorna um LocalTime com a hora (hh), minutos (mm) e segundos (ss) fornecidos.
+LocalDateTime.of(YYYY, MM, DD, hh, mm, ss)
+retorna um LocalDateTime com o ano (YYYY), mês (MM), dia (DD), hora (hh), minutos (mm) e segundos (ss) fornecidos.
+Materiais complementares
+Java 8, DateTime API
+Java 8, Um novo tempo
+Introduction to the Java 8 Date/Time API
+Referências
+Dates, Times, and Locales. In: SIERRA, Kathy; BATES, Bert; ROBSON, Elisabeth. OCP Java SE 8 Programmer II Exam Guide. [S. l.: s. n.], 2018. cap. 4.
+Pacote java.time
+Classe LocalDate
+Classe LocalDateTime
+Listando todos os Zone.id
