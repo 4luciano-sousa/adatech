@@ -1,0 +1,327 @@
+Programação funcional
+A programação funcional permite escrever código de forma declarativa. O programador especifica o que fazer em vez de tratar com o estado dos objetos, focando mais em expressões do que em estruturas de repetição, por exemplo.
+
+A programação funcional utiliza expressões lambdas, ou simplesmente lambdas, para tornar a linguagem Java funcional. Expressões lambdas podem ser interpretadas como métodos sem nome, possuindo uma definição de parâmetros e um bloco de código.
+
+Caso de Uso
+Usaremos um caso de uso para ilustrar o uso de lambdas.
+
+Dada a seguinte classe representando um Animal, com 3 atributos: especie para descrever a espécie do animal e dois atributos identificando as características do animal, se ele pode saltar e se ele pode nadar.
+
+public class Animal {
+
+   private String especie;
+   private boolean podeSaltar;
+   private boolean podeNadar;
+
+   public Animal(String nomeDaEspecie, boolean saltador, boolean nadador){
+      especie = nomeDaEspecie;
+      podeSaltar = saltador;
+      podeNadar = nadador;
+   }
+
+   public boolean podeSaltar() { return podeSaltar; }
+   public boolean podeNadar() { return podeNadar; }
+   public String toString() { return especie; }
+}
+Código: classe Animal
+
+E a seguinte interface Verificador com somente um método responsável por verificar alguma característica de um animal.
+
+public interface Verificador {
+    boolean verificar(Animal a);
+}
+Código: interface Verificador
+
+Dado o seguinte problema: imprima os animais que podem saltar. Uma possível solução é o código abaixo, criar uma classe VerificaSeSaltador que implementa a interface Verificador.
+
+public class VerificaSeSaltador implements Verificador{
+
+    @Override
+    public boolean verificar(Animal a) {
+        return a.podeSaltar();
+    }
+}
+Código: classe VerificaSeSaltador
+
+Com a classe VerificaSeSaltador, podemos codificar uma aplicação Java como a TraditionalSearch abaixo, que possui o método print() responsável por percorrer uma lista de animais e com um Verificador recebido como parâmetro, verificar se o animal possui determinada característica (pode saltar) e imprimindo-o em seguida.
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TraditionalSearch {
+    public static void main(String[] args) {
+
+        // lista de animais
+        List<Animal> animais = new ArrayList<Animal>();
+        animais.add(new Animal("peixe", false, true));
+        animais.add(new Animal("canguru", true, false));
+        animais.add(new Animal("coelho", true, false));
+        animais.add(new Animal("tartaruga", false, true));
+
+        // imprime os animais verificados
+        imprimir(animais, new VerificaSeSaltador());
+    }
+    private static void imprimir(List<Animal> animais, Verificador verificador) {
+        for (Animal animal : animais) {
+            // verificando
+            if (verificador.verificar(animal)) {
+                System.out.print(animal + " ");
+            }
+        }
+        System.out.println();
+    }
+}
+Código: TraditionalSearch.java
+
+canguru coelho
+Execução: resultado de TraditionalSearch.java
+
+Aplicando lambdas
+O que aconteceria se tivéssemos a necessidade de imprimir os animais que podem nadar, no nosso aplicativo?
+
+Usando a abordagem clássica, seria necessário criarmos uma classe, por exemplo, VerificaSeNadador semelhante à classe VerificaSeSaltador, e usar no nosso TraditionalSearch.
+
+Uma alternativa, mais simples, seria através de uma expressão lambda implementando a interface e usar na chamada do método imprimir() conforme os trechos de código abaixo, sem a necessidade de implementação das classes VerificaSeSaltador ou VerificaSeNadador.
+
+// imprime os animais que podem saltar  
+imprimir(animais, animal -> animal.podeSaltar());
+Trecho de código: expressão lambda podeSaltar()
+
+// imprime os animais que podem nadar  
+imprimir(animais, animal -> animal.podeNadar());
+Trecho de código: expressão lambda podeNadar()
+
+Sintaxe lambda
+Lambdas expressões só podem ser escritas para implementar interfaces que possuem somente um método abstrato, denominadas interfaces funcionais.
+
+Sintaxe completa:
+
+  (<parâmetros>) -> {<bloco de código>} 
+Sintaxe: expressão lambda completa
+
+Sintaxe reduzida, quando temos somente um parâmetro e uma linha de código, tornando os parênteses e as chaves opcionais:
+
+  <parâmetro> -> <retorno da função ou instrução> 
+Sintaxe: expressão lambda simplificada
+
+Do nosso caso de uso:
+
+	animal -> animal.podeSaltar()
+Trecho de código: podeSaltar simplificado
+
+sintaxe:
+um único parâmetro (animal) com o tipo de dado implícito;
+a seta separando o parâmetro e o corpo do método;
+corpo de método com uma única instrução e que retorna algo (booleano).
+Ou, de outra forma:
+
+(Animal animal) -> {return a.podeSaltar();}
+Trecho de código: podeSaltar completo
+
+sintaxe
+
+um parâmetro único com o tipo (Animal) e o nome (animal);
+a seta separando o parâmetro e o corpo do método;
+um bloco de código com uma linha, incluindo o return e o ponto-e-vírgula.
+Observe que os parênteses podem ser omitidos se há somente um único parâmetro, os tipos dos parâmetros não são obrigatórios e as chaves ({}) também podem ser omitidas quando existe somente uma única instrução. Java não requer que seja digitado o return ou usar um ponto-e-vírgula quando as chaves ({}) não são usadas.
+
+Importante, no bloco de código de uma expressão lambda, os parâmetros do método e variáveis locais podem ser referenciadas somente se forem efetivamente final. Um variável é efetivamente final se for marcada com a palavra-reservada final ou se o valor não é alterado após ser atribuída.
+
+Interfaces funcionais presentes no Java
+Interfaces funcionais são interfaces que possuem somente um método abstrato. Devemos conhecer algumas interfaces funcionais presentes (built in) na linguagem: Predicate, Consumer, Supplier, e Comparator.
+
+Predicate
+O Predicate é usado geralmente para a implementação de validações.
+
+public interface Predicate<T> {
+   boolean test(T t);
+}
+Sintaxe: Predicate
+
+Podemos utilizar o Predicate como validador dos animais.
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
+public class UsoDoPredicate {
+
+    public static void main(String[] args) {
+        List<Animal> animais = new ArrayList<>();
+        animais.add(new Animal("peixe", false, true));
+        animais.add(new Animal("canguru", true, false));
+        
+        print(animais, a -> a.podeSaltar());
+    }
+    private static void print(List<Animal> animais, Predicate<Animal> verificador) {
+        for (Animal animal : animais) {
+            if (verificador.test(animal))
+                System.out.print(animal + " ");
+        }
+        System.out.println();
+    }
+}
+Código: UsoDoPredicate.java
+
+canguru
+Execução: execução do UsoDoPredicate.java
+
+Consumer
+O Consumer é uma interface usada para consumir objetos, o seu método não retorna valor.
+
+public interface Consumer<T> {
+    void accept(T t)
+}
+Sintaxe: Consumer
+
+Usando o Consumer para imprimir um valor com println().
+
+import java.util.function.Consumer;
+
+public class UsoDoConsumer {
+
+    public static void main(String[] args) {
+        Consumer<String> consumer = x -> System.out.println(x);
+        print(consumer, "Hello World");
+    }
+    private static void print(Consumer<String> consumer, String value) {
+        consumer.accept(value);
+    }
+}
+Código: UsoDoConsumer.java
+
+Hello World
+Execução: execução do UsoDoConsumer.java
+
+Supplier
+O Supplier fornece objetos.
+
+public interface Supplier<T> {  
+     T get();  
+}
+Sintaxe: Supplier
+
+Neste exemplo usamos o Supplier para fornecer o valor 42 como Integer.
+
+import java.util.function.Supplier;
+
+public class UsoDoSupplier {
+
+    public static void main(String[] args) {
+        Supplier<Integer> number = () ->  42;
+        System.out.println(returnNumber(number));
+    }
+
+    private static int returnNumber(Supplier<Integer> supplier) {
+        return supplier.get();
+    }
+}
+Código: UsoDoSupplier.java
+
+42
+Execução: execução do UsoDoSupplier.java
+
+Comparator
+O Comparator é utilizado para criar regras de ordenação entre elementos de uma classe. As seguintes regras devem ser obedecidas na implementação do método de um Comparator:
+
+retornar um número negativo se o primeiro valor é menor que o segundo;
+retornar zero se os valores são iguais;
+retornar positivo se o primeiro valor é maior que o segundo.
+Exemplo de implementação de um Comparator para números inteiros:
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class UsoDoComparator {
+
+    public static void main(String[] args) {
+        Integer [] array = {4, 1, 7, 2, 5};
+        print(array, (i1, i2) -> i1 - i2);
+    }
+
+    public static void print(Integer [] array, Comparator<Integer> comparator) {
+        Arrays.sort(array, comparator);
+        System.out.println(Arrays.toString(array));
+    }
+}
+Código: UsoDoComparator.java
+
+[1, 2, 4, 5, 7]
+Execução: execução do UsoDoComparator.java
+
+Uso de lambda em métodos da API Java
+A API JAVA possui muitos métodos que usam expressões lambdas. No exemplo abaixo, ilustramos o uso de lambdas com um objeto do tipo List da Collection API.
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExemploUsandoLambdasEmAPI {
+
+    public static void main(String[] args) {
+        List<String> names = new ArrayList<>();
+        names.add("Joao");
+        names.add("Jose");
+        names.add("Maria");
+        System.out.println("Nomes: " + names);
+
+        names.removeIf(name -> !name.startsWith("J"));
+        System.out.println("Nomes iniciando com J: " + names);
+
+        names.add("Araci");
+        names.add("Ze");
+        System.out.println("\nNomes: " + names);
+
+        names.sort((name1, name2) -> name1.compareTo(name2));
+        System.out.println("Nomes ordenados: " + names);
+
+        System.out.println("\nImprimindo novamente");
+        names.forEach(name -> System.out.println(name));
+
+    }
+}
+Código: ExemploUsandoLambdasEmAPI.java
+
+Nomes: [Joao, Jose, Maria]
+Nomes iniciando com J: [Joao, Jose]
+
+Nomes: [Joao, Jose, Araci, Ze]
+Nomes ordenados: [Araci, Joao, Jose, Ze]
+
+Imprimindo novamente
+Araci
+Joao
+Jose
+Ze
+Execução: execução do ExemploUsandoLambdasEmAPI.java
+
+Do exemplo anterior, usamos os métodos removeIf(), sort() e foreach().
+
+Método removeIf()
+Utiliza um Predicate para decidir qual elemento remover da lista.
+
+Método sort()
+Usa um Comparator responsável pela regra de ordenação da lista.
+
+Método forEach()
+Recebe um Consumer que é executado para cada elemento da lista.
+
+Conclusão
+Neste capítulo aprendemos a sintaxe das expressões lambadas.
+
+Com o uso de lambadas conseguimos escrever código Java de forma funcional, implementando interfaces funcionais, interfaces que só possuem um método abstrato.
+
+Além disso, vimos que a linguagem Java possui diversas interfaces funcionais como Predicate, Consumer, Producer e Comparator. Como também se utiliza destas interfaces na chamada de diversos métodos da API.
+
+Materiais complementares
+Interfaces funcionais
+Interfaces funcionais (2)
+Desmistificando Lambdas
+Referências
+LAMBDAS and Functional Interfaces. In: BOYARSKY, Jeanne; SELIKOFF, Scott. OCP - Oracle Certified Professional Java SE 11 Developer. [S. l.: s. n.], 2020. cap. 6.
+Comparator
+Consumer
+Functional Interface
+Oracle Lambda Expressions
+Predicate
+Supplier
