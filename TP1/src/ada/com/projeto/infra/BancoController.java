@@ -34,6 +34,7 @@ public class BancoController {
 			throw new IllegalArgumentException("Tipo de conta inválido");
 		}
 		contaRepositorio.salvar(conta);
+		System.out.println("Conta aberta com sucesso!");
 	}
 
 	public Conta buscarConta(String identificador) {
