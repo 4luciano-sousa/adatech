@@ -14,9 +14,9 @@ import java.util.stream.Stream;
 public class GanhadoresOscar {
 
 		public static void main(String[] args) {
-	        String inputFile = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio\\oscars_actors.csv";
-	        String actorsFile = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio\\atores.csv";
-	        String actressesFile = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio\\atrizes.csv";
+	        String inputFile = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio1\\oscars_actors.csv";
+	        String actorsFile = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio1\\atores.csv";
+	        String actressesFile = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio1\\atrizes.csv";
 
 	        try (Stream<String> lines = Files.lines(Paths.get(inputFile))) {
 	            List<Ator> actors = lines.skip(1)

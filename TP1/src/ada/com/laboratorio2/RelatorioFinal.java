@@ -10,68 +10,74 @@ import java.util.stream.Stream;
 public class RelatorioFinal {
 
 	public static void main(String[] args) {
-		String actorsFile = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio2\\atores.csv";
-		String actressesFile = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio2\\atrizes.csv";
-		String reportFile = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio2\\relatorio_final.csv";
+		String arquivoatores = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio2\\atores.csv";
+		String arquivoatrizes = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio2\\atrizes.csv";
+		String relatorio = "C:\\Users\\Luciano\\eclipse-workspace\\adatech\\TP1\\src\\ada\\com\\laboratorio2\\relatorio_final.csv";
 
 		try {
-			List<Atores> actors = readActorsFile(actorsFile);
-			List<Atores> actresses = readActorsFile(actressesFile);
-
-			Atores youngestActor = actors.stream().min(Comparator.comparingInt(a -> a.age)).orElse(null);
-			Atores mostAwardedActress = actresses.stream()
-					.collect(Collectors.groupingBy(a -> a.name, Collectors.counting())).entrySet().stream()
+			List<Atores> atores = readarquivoatores(arquivoatores);
+			List<Atores> atrizes = readarquivoatores(arquivoatrizes);
+			
+			// Ator mais jovem a ganhar um Oscar.
+			Atores maisjovem = atores.stream().min(Comparator.comparingInt(a -> a.age)).orElse(null);
+			
+			// Atriz que mais vezes foi premiada.
+			Atores maispremiada = atrizes.stream()
+					.collect(Collectors.groupingBy(a -> a.nome, Collectors.counting())).entrySet().stream()
 					.max(Map.Entry.comparingByValue()).map(e -> {
-						return actresses.stream().filter(a -> a.name.equals(e.getKey())).findFirst().orElse(null);
+						return atrizes.stream().filter(a -> a.nome.equals(e.getKey())).findFirst().orElse(null);
 					}).orElse(null);
-
-			Atores mostAwardedYoungActress = actresses.stream().filter(a -> a.age >= 20 && a.age <= 30)
-					.collect(Collectors.groupingBy(a -> a.name, Collectors.counting())).entrySet().stream()
+			
+			// Atriz entre 20 e 30 anos que mais vezes foi vencedora.
+			Atores jovemvencedora = atrizes.stream().filter(a -> a.age >= 20 && a.age <= 30)
+					.collect(Collectors.groupingBy(a -> a.nome, Collectors.counting())).entrySet().stream()
 					.max(Map.Entry.comparingByValue()).map(e -> {
-						return actresses.stream().filter(a -> a.name.equals(e.getKey())).findFirst().orElse(null);
+						return atrizes.stream().filter(a -> a.nome.equals(e.getKey())).findFirst().orElse(null);
 					}).orElse(null);
-
-			List<String> moreThanOneOscar = Stream.concat(actors.stream(), actresses.stream())
-					.collect(Collectors.groupingBy(a -> a.name, Collectors.counting())).entrySet().stream()
+			
+			//  Atores ou atrizes receberam mais de um Oscar.
+			List<String> maisdeumoscar = Stream.concat(atores.stream(), atrizes.stream())
+					.collect(Collectors.groupingBy(a -> a.nome, Collectors.counting())).entrySet().stream()
 					.filter(e -> e.getValue() > 1).map(Map.Entry::getKey).collect(Collectors.toList());
+			
+			// Resumo de quantos prêmios foram recebidos
+			Map<String, List<Atores>> resumopremiacao = Stream.concat(atores.stream(), atrizes.stream())
+					.filter(a -> maisdeumoscar.contains(a.nome)).collect(Collectors.groupingBy(a -> a.nome));
 
-			Map<String, List<Atores>> summaryAwards = Stream.concat(actors.stream(), actresses.stream())
-					.filter(a -> moreThanOneOscar.contains(a.name)).collect(Collectors.groupingBy(a -> a.name));
-
-			saveReport(reportFile, youngestActor, mostAwardedActress, mostAwardedYoungActress, moreThanOneOscar,
-					summaryAwards);
+			saveReport(relatorio, maisjovem, maispremiada, jovemvencedora, maisdeumoscar,
+					resumopremiacao);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static List<Atores> readActorsFile(String filePath) throws IOException {
+	private static List<Atores> readarquivoatores(String filePath) throws IOException {
 		return Files.lines(Paths.get(filePath)).skip(1).map(line -> {
 			String[] parts = line.split(",");
-			String name = parts[0];
-			String movie = parts[1];
+			String nome = parts[0];
+			String filme = parts[1];
 			int oscarYr = Integer.parseInt(parts[2]);
 			String birthDateFormat = parts[3];
 			int age = Integer.parseInt(parts[4]);
 			int ageCurrent = Integer.parseInt(parts[5]);
-			return new Atores(name, movie, oscarYr, birthDateFormat, age, ageCurrent);
+			return new Atores(nome, filme, oscarYr, birthDateFormat, age, ageCurrent);
 		}).collect(Collectors.toList());
 	}
 
-	private static void saveReport(String filePath, Atores youngestActor, Atores mostAwardedActress,
-			Atores mostAwardedYoungActress, List<String> moreThanOneOscar, Map<String, List<Atores>> summaryAwards)
+	private static void saveReport(String filePath, Atores maisjovem, Atores maispremiada,
+			Atores jovemvencedora, List<String> maisdeumoscar, Map<String, List<Atores>> resumopremiacao)
 			throws IOException {
 		List<String> lines = new ArrayList<>();
-		lines.add("ator_mais_jovem," + (youngestActor != null ? youngestActor.toString() : "N/A"));
-		lines.add("atriz_mais_premiada," + (mostAwardedActress != null ? mostAwardedActress.toString() : "N/A"));
+		lines.add("ator_mais_jovem," + (maisjovem != null ? maisjovem.toString() : "N/A"));
+		lines.add("atriz_mais_premiada," + (maispremiada != null ? maispremiada.toString() : "N/A"));
 		lines.add("atriz_jovem_vencedora,"
-				+ (mostAwardedYoungActress != null ? mostAwardedYoungActress.toString() : "N/A"));
-		lines.add("mais_de_um_oscar," + String.join(";", moreThanOneOscar));
-		summaryAwards.forEach((name, actors) -> {
+				+ (jovemvencedora != null ? jovemvencedora.toString() : "N/A"));
+		lines.add("mais_de_um_oscar," + String.join(";", maisdeumoscar));
+		resumopremiacao.forEach((nome, atores) -> {
 			StringBuilder sb = new StringBuilder();
-			sb.append(name).append(",");
-			actors.forEach(a -> sb.append(a.oscarYr).append(":").append(a.age).append(":").append(a.movie).append(";"));
+			sb.append(nome).append(",");
+			atores.forEach(a -> sb.append(a.oscarYr).append(":").append(a.age).append(":").append(a.filme).append(";"));
 			lines.add("resumo_premiacao," + sb.toString());
 		});
 		Files.write(Paths.get(filePath), lines);

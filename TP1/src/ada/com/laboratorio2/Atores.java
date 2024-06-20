@@ -2,17 +2,17 @@ package ada.com.laboratorio2;
 
 public class Atores {
 
-	String name;
-	String movie;
+	String nome;
+	String filme;
 	int oscarYr;
 	String birthDateFormat;
 	int age;
 	int ageCurrent;
 
-	public Atores(String name, String movie, int oscarYr, String birthDateFormat, int age, int ageCurrent) {
+	public Atores(String nome, String filme, int oscarYr, String birthDateFormat, int age, int ageCurrent) {
 
-		this.name = name;
-		this.movie = movie;
+		this.nome = nome;
+		this.filme = filme;
 		this.oscarYr = oscarYr;
 		this.birthDateFormat = birthDateFormat;
 		this.age = age;
@@ -21,6 +21,6 @@ public class Atores {
 
 	@Override
 	public String toString() {
-		return name + "," + movie + "," + oscarYr + "," + birthDateFormat + "," + age + "," + ageCurrent;
+		return nome + "," + filme + "," + oscarYr + "," + birthDateFormat + "," + age + "," + ageCurrent;
 	}
 }
